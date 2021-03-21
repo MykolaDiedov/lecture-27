@@ -35,34 +35,32 @@ const menu = {
     ]
 };
 
-function order(menuName) {
+function order(menuName, onOrderComplete) {
 
     console.log('Start cooking...');
 
     const result = [];
 
-    const foo = (name) => {
-
-        result.push(name);
+    const getCookingResult = (name, index) => {
+        result[index] = name;
+        if(menuName.length === result.filter(Boolean).length) {
+            onOrderComplete(result);
+        }
     };
 
-    function cooking({name, time}) {
+    function cooking({name, time}, index) {
 
-        setTimeout(function() {
-
-            const isComplete = !Math.round(Math.random());
-            if (isComplete){
-
-                return foo({name, isComplete});
-            } else {
-
-                console.log('Not ready');
-            }
-        }(), time);
+        setTimeout(() => {
+            const condition = true;
+            getCookingResult(
+                condition ? {name, status: 'complete'} : {name, status: 'reject'}, index);
+        }, time);
     }
 
     menuName.forEach(cooking);
-
-    console.log(result);
 }
-console.log(order(menu.burger));
+
+console.log(order(menu.burger, takeOrder));
+function takeOrder (orderResult) {
+    console.log(orderResult);
+}
